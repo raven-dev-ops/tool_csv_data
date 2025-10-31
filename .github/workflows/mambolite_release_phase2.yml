@@ -1,0 +1,66 @@
+name: Release MamboLite Phase 2
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Tag to release (e.g., v2.0.0)"
+        required: true
+      prerelease:
+        description: "Mark as pre-release"
+        required: false
+        default: 'false'
+
+permissions:
+  contents: write
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyinstaller reportlab -r MamboLite/requirements.txt
+      - name: Build CLI
+        run: |
+          python -m PyInstaller --noconfirm --onefile MamboLite\mambo_lite.py ^
+            --add-data "MamboLite\lookups;lookups" ^
+            --add-data "MamboLite\smtp.json.example;." ^
+            --name MamboLiteCLI
+      - name: Build GUI
+        run: |
+          python -m PyInstaller --noconfirm --onefile --windowed MamboLite\mambo_lite_gui.py ^
+            --add-data "MamboLite\lookups;lookups" ^
+            --add-data "MamboLite\smtp.json.example;." ^
+            --name MamboLite
+      - name: Generate SOW PDF
+        run: |
+          python MamboLite/scripts/generate_docs.py
+      - name: Create Phase 2 asset pack
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path deliverables | Out-Null
+          Compress-Archive -Force -DestinationPath deliverables/MamboLite_phase2_assets.zip -Path `
+            MamboLite/lookups/*, MamboLite/samples/sample_contacts.csv, MamboLite/smtp.json.example, README.md, ROADMAP.md
+      - name: Create Release and Upload
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            dist/MamboLite.exe
+            dist/MamboLiteCLI.exe
+            MamboLite/docs/SOW.pdf
+            deliverables/MamboLite_phase2_assets.zip
+          tag_name: ${{ inputs.tag }}
+          name: ${{ format('MamboLite {0}', inputs.tag) }}
+          body: |
+            Phase 2 readiness: asset pack includes lookups, sample contacts, SMTP template, and docs.
+            Executables are built from current main. Use the Kanban Phase 2 board to track feature delivery.
+          prerelease: ${{ inputs.prerelease == 'true' }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
