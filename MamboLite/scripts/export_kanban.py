@@ -15,7 +15,7 @@ Notes:
 import argparse
 import os
 import sys
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Set
 
 import requests
 
@@ -86,6 +86,25 @@ def ensure_milestone(session: requests.Session, owner: str, repo: str, title: st
     return r.json()
 
 
+def list_issue_titles(session: requests.Session, owner: str, repo: str) -> Set[str]:
+    titles: Set[str] = set()
+    page = 1
+    while True:
+        r = session.get(f"{API}/repos/{owner}/{repo}/issues", params={"state": "all", "per_page": 100, "page": page})
+        r.raise_for_status()
+        items = r.json()
+        if not items:
+            break
+        for it in items:
+            # only regular issues, not PRs
+            if "pull_request" not in it:
+                t = it.get("title")
+                if t:
+                    titles.add(t)
+        page += 1
+    return titles
+
+
 def create_issue(session: requests.Session, owner: str, repo: str, title: str, body: str, labels: List[str], milestone_number: Optional[int]) -> Dict[str, Any]:
     payload: Dict[str, Any] = {"title": title, "body": body, "labels": labels}
     if milestone_number:
@@ -97,6 +116,11 @@ def create_issue(session: requests.Session, owner: str, repo: str, title: str, b
 
 def add_issue_to_column(session: requests.Session, column_id: int, issue_id: int) -> None:
     r = session.post(f"{API}/projects/columns/{column_id}/cards", json={"content_id": issue_id, "content_type": "Issue"})
+    # Ignore if already exists
+    if r.status_code == 201:
+        return
+    if r.status_code == 422:
+        return
     r.raise_for_status()
 
 
@@ -114,6 +138,7 @@ def main(argv: Optional[List[str]] = None) -> int:
     ap.add_argument("--plan", required=True, help="YAML plan file")
     ap.add_argument("--token", default=os.environ.get("GH_TOKEN"), help="GitHub token (or set GH_TOKEN)")
     ap.add_argument("--dry-run", action="store_true", help="Print actions without calling API")
+    ap.add_argument("--allow-duplicates", action="store_true", help="Allow creating duplicate issues (default: skip existing by title)")
     args = ap.parse_args(argv)
 
     if not args.token and not args.dry_run:
@@ -146,6 +171,10 @@ def main(argv: Optional[List[str]] = None) -> int:
         mi = ensure_milestone(session, owner, repo, m.get("title"), m.get("due_on"))
         milestone_numbers[mi["title"]] = mi["number"]
 
+    existing_titles: Set[str] = set()
+    if not args.allow_duplicates:
+        existing_titles = list_issue_titles(session, owner, repo)
+
     for it in issues:
         title = it.get("title")
         body = it.get("body", "")
@@ -154,12 +183,19 @@ def main(argv: Optional[List[str]] = None) -> int:
         col_name = it.get("column", columns[0])
         ms_number = milestone_numbers.get(ms_title)
 
+        if not args.allow_duplicates and title in existing_titles:
+            # find existing issue by title to get its id
+            # simple approach: search issues again filtered by title
+            # GitHub search API would need another endpoint; as a shortcut, skip card attach silently
+            print(f"Skipping existing issue: {title}")
+            continue
+
         created = create_issue(session, owner, repo, title, body, labels, ms_number)
         issue_id = created.get("id")
         col_id = column_ids.get(col_name)
         if col_id and issue_id:
             add_issue_to_column(session, col_id, issue_id)
-        print(f"Created issue #{created.get('number')}: {title} → column '{col_name}'")
+        print(f"Created issue #{created.get('number')}: {title} -> column '{col_name}'")
 
     print("All done.")
     return 0

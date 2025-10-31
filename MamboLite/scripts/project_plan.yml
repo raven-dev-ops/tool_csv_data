@@ -1,6 +1,6 @@
 project:
   name: "MamboLite Phase 1"
-  description: "Single CSV contact formatter: CLI + GUI + SMTP"
+  description: "Single CSV contact formatter: CLI + GUI + SMTP/Outlook, with docs and release"
   columns: [Backlog, Ready, In Progress, In Review, Done]
 
 milestones:
@@ -8,72 +8,196 @@ milestones:
     due_on: "2025-11-07"
   - title: "M2: GUI + Email"
     due_on: "2025-11-12"
-  - title: "M3: Docs + Samples"
+  - title: "M3: Docs + Packaging"
     due_on: "2025-11-14"
+  - title: "M4: Acceptance & Handover"
+    due_on: "2025-11-18"
 
 issues:
   - title: "Select baseline and stabilize code"
-    body: "Consolidate Phase 1 scope and ensure clean logging and inputs."
+    body: |
+      Consolidate Phase 1 scope and ensure clean logging and inputs.
+
+      Acceptance:
+      - [ ] Single-source CSV flow only
+      - [ ] No emoji/unicode in logs on Windows
+      - [ ] Fallback encodings: UTF-8/UTF-8-SIG/CP1252/Latin-1
     labels: [phase1, baseline]
     milestone: "M1: Baseline + CLI"
     column: Backlog
 
   - title: "Add header alias mapping via lookups"
-    body: "Implement alias→target mapping from column_map_lookup.csv"
+    body: |
+      Implement alias -> target mapping from `lookups/column_map_lookup.csv`.
+
+      Acceptance:
+      - [ ] Case-insensitive aliasing
+      - [ ] Unknown headers ignored safely
+      - [ ] README includes example edits
     labels: [phase1, cli]
     milestone: "M1: Baseline + CLI"
     column: Ready
 
   - title: "Implement name parsing and normalization"
-    body: "Prefix/suffix handling, basic compound last names, phone/email normalization."
+    body: |
+      Prefix/suffix handling, basic compound last names, phone/email normalization.
+
+      Acceptance:
+      - [ ] full_name -> first/middle/last heuristic
+      - [ ] Prefix/suffix via lookups
+      - [ ] Phone normalized to 555-555-5555 when 10 digits
+      - [ ] Emails lowercased
     labels: [phase1, cli]
     milestone: "M1: Baseline + CLI"
     column: Ready
 
   - title: "CLI flags and output schema"
-    body: "Add argparse, write standard CSV columns in fixed order."
+    body: |
+      Add argparse, fixed output schema order; optional dedupe by email.
+
+      Acceptance:
+      - [ ] `--input/--output/--lookups/--source/--no-dedupe`
+      - [ ] Output columns match README schema
     labels: [phase1, cli]
     milestone: "M1: Baseline + CLI"
     column: Ready
 
   - title: "Tkinter GUI wrapper"
-    body: "Browse input/output, pick lookups, toggle dedupe, optional email."
+    body: |
+      Browse input/output, pick lookups, toggle dedupe, optional email.
+
+      Acceptance:
+      - [ ] Input/Output pickers
+      - [ ] Lookups folder picker
+      - [ ] Dedupe toggle
+      - [ ] Email toggle with method selection
     labels: [phase1, gui]
     milestone: "M2: GUI + Email"
     column: Backlog
 
   - title: "SMTP send of result"
-    body: "Send attachment via SMTP using JSON config."
+    body: |
+      Send attachment via SMTP using JSON config; TLS/SSL support.
+
+      Acceptance:
+      - [ ] JSON config supports TLS/SSL, port, sender
+      - [ ] Attachment sends successfully
+      - [ ] Clear error on auth/connect failure
     labels: [phase1, email]
     milestone: "M2: GUI + Email"
     column: Backlog
 
+  - title: "Outlook (MAPI) email option"
+    body: |
+      Use pywin32 to send email via Outlook on Windows; add GUI toggle.
+
+      Acceptance:
+      - [ ] Outlook prerequisites documented
+      - [ ] Attachment send via Outlook
+      - [ ] Graceful error when Outlook unavailable
+    labels: [phase1, email]
+    milestone: "M2: GUI + Email"
+    column: Ready
+
   - title: "Seed lookups and sample CSV"
-    body: "Provide starter files for prefixes, suffixes, compound names, and a sample."
+    body: |
+      Provide starter files for prefixes, suffixes, compound names, and a sample CSV.
+
+      Acceptance:
+      - [ ] `lookups/` contains prefixes/suffixes/compounds
+      - [ ] Sample CSV demonstrates varied fields
     labels: [phase1, lookups]
-    milestone: "M3: Docs + Samples"
+    milestone: "M3: Docs + Packaging"
     column: Backlog
 
   - title: "Documentation and README"
-    body: "Usage instructions, lookup editing guidance, and acceptance criteria."
+    body: |
+      Usage instructions, lookup editing guidance, and acceptance criteria.
+
+      Acceptance:
+      - [ ] README covers GUI and CLI usage
+      - [ ] Output schema documented
+      - [ ] Troubleshooting for encodings/SMTP/Outlook
     labels: [phase1, docs]
-    milestone: "M3: Docs + Samples"
-    column: Backlog
-  - title: "Windows packaging (.exe)"
-    body: "Create PyInstaller builds for CLI and GUI; include lookups and SMTP template."
-    labels: [phase1, packaging]
-    milestone: "M3: Docs + Samples"
+    milestone: "M3: Docs + Packaging"
     column: Backlog
 
-  - title: "Add Outlook (MAPI) email option"
-    body: "Use pywin32 to send email via Outlook on Windows; add GUI toggle."
-    labels: [phase1, email]
-    milestone: "M2: GUI + Email"
+  - title: "Troubleshooting & FAQ"
+    body: |
+      Add a section for common problems and fixes: encoding, blocked SMTP ports, Outlook missing, file permissions.
+
+      Acceptance:
+      - [ ] FAQ includes at least 6 common issues
+      - [ ] Links to config examples
+    labels: [phase1, docs]
+    milestone: "M3: Docs + Packaging"
+    column: Backlog
+
+  - title: "Windows packaging (.exe)"
+    body: |
+      Create PyInstaller builds for CLI and GUI; include lookups and SMTP template.
+
+      Acceptance:
+      - [ ] CLI and GUI onefile builds
+      - [ ] Bundled lookups and SMTP template
+    labels: [phase1, packaging]
+    milestone: "M3: Docs + Packaging"
+    column: Backlog
+
+  - title: "Packaging validation on clean Windows"
+    body: |
+      Validate executables on a clean Windows VM without dev tools.
+
+      Acceptance:
+      - [ ] Runs with no missing DLLs
+      - [ ] GUI runs without console
+      - [ ] Processes sample CSV successfully
+    labels: [phase1, qa]
+    milestone: "M3: Docs + Packaging"
     column: Ready
+
+  - title: "Security & privacy notes"
+    body: |
+      Document credential handling (SMTP JSON), no data retention, and privacy assumptions.
+
+      Acceptance:
+      - [ ] README section on credentials & privacy
+    labels: [phase1, security]
+    milestone: "M3: Docs + Packaging"
+    column: Backlog
 
   - title: "Publish Kanban to GitHub Project"
-    body: "Run export_kanban.py with GH_TOKEN against target repo; verify columns/cards."
+    body: |
+      Run exporter and verify columns/cards without duplicates.
+
+      Acceptance:
+      - [ ] Project created or updated
+      - [ ] No duplicate issues
     labels: [phase1, management]
-    milestone: "M3: Docs + Samples"
+    milestone: "M3: Docs + Packaging"
     column: Ready
+
+  - title: "UAT: Acceptance & Handover"
+    body: |
+      Final acceptance with client sample CSVs and handover.
+
+      Acceptance:
+      - [ ] Process 3-5 client CSVs successfully
+      - [ ] Validate formatted CSV correctness (spot-check)
+      - [ ] Email send succeeds (SMTP or Outlook)
+      - [ ] Deliverables: .exe + README + SOW.pdf
+    labels: [phase1, uat]
+    milestone: "M4: Acceptance & Handover"
+    column: Ready
+
+  - title: "Release notes & CHANGELOG"
+    body: |
+      Prepare release notes for v1.1 and summarize features and known limitations.
+
+      Acceptance:
+      - [ ] CHANGELOG entry for v1.1
+      - [ ] Release notes list features, usage, and known limitations
+    labels: [phase1, release]
+    milestone: "M4: Acceptance & Handover"
+    column: Backlog
 
