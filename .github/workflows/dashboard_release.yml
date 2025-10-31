@@ -1,0 +1,76 @@
+name: Release MamboLite Dashboard
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Tag to release (e.g., v3.0.0)"
+        required: true
+      prerelease:
+        description: "Mark as pre-release"
+        required: false
+        default: 'true'
+
+permissions:
+  contents: write
+
+jobs:
+  build-dashboard:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Build frontend (if present)
+        shell: bash
+        run: |
+          if [ -f dashboard/web/package.json ]; then
+            pushd dashboard/web
+            npm ci
+            npm run build
+            popd
+          else
+            echo "dashboard/web not present; skipping"
+          fi
+      - name: Build API (Python) if present
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install API deps & package (if present)
+        shell: bash
+        run: |
+          if [ -f dashboard/api-python/requirements.txt ]; then
+            python -m pip install --upgrade pip
+            pip install -r dashboard/api-python/requirements.txt
+            echo "API deps installed (no containerization step here)"
+          else
+            echo "dashboard/api-python not present; skipping"
+          fi
+      - name: Package artifacts
+        shell: bash
+        run: |
+          mkdir -p deliverables
+          zip -r deliverables/dashboard_build_${{ inputs.tag }}.zip dashboard || true
+          cp -f MamboLite/docs/DASHBOARD_PROPOSAL.md deliverables/ 2>/dev/null || true
+          cp -f MamboLite/docs/OCR_PROPOSAL.md deliverables/ 2>/dev/null || true
+      - name: Prepare release notes
+        shell: bash
+        run: |
+          PHASE="Dashboard"
+          TAG="${{ inputs.tag }}"
+          sed -e "s/{{PHASE}}/${PHASE}/g" -e "s/{{TAG}}/${TAG}/g" .github/RELEASE_TEMPLATE.md > .github/RELEASE_NOTES.md
+      - name: Create Release and Upload
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            deliverables/dashboard_build_${{ inputs.tag }}.zip
+            MamboLite/docs/DASHBOARD_PROPOSAL.md
+          tag_name: ${{ inputs.tag }}
+          name: ${{ format('MamboLite Dashboard {0}', inputs.tag) }}
+          body_path: .github/RELEASE_NOTES.md
+          prerelease: ${{ inputs.prerelease == 'true' }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+

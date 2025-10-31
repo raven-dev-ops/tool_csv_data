@@ -1,0 +1,50 @@
+name: Release MamboLite OCR Module
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Tag to release (e.g., v4.0.0)"
+        required: true
+      prerelease:
+        description: "Mark as pre-release"
+        required: false
+        default: 'true'
+
+permissions:
+  contents: write
+
+jobs:
+  build-ocr:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Package OCR assets (if present)
+        shell: bash
+        run: |
+          mkdir -p deliverables
+          if [ -d ocr ]; then
+            zip -r deliverables/ocr_assets_${{ inputs.tag }}.zip ocr
+          else
+            echo "ocr/ folder not present; packaging proposals only"
+            zip -r deliverables/ocr_assets_${{ inputs.tag }}.zip MamboLite/docs/OCR_PROPOSAL.md
+          fi
+      - name: Prepare release notes
+        shell: bash
+        run: |
+          PHASE="Business Card OCR"
+          TAG="${{ inputs.tag }}"
+          sed -e "s/{{PHASE}}/${PHASE}/g" -e "s/{{TAG}}/${TAG}/g" .github/RELEASE_TEMPLATE.md > .github/RELEASE_NOTES.md
+      - name: Create Release and Upload
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            deliverables/ocr_assets_${{ inputs.tag }}.zip
+            MamboLite/docs/OCR_PROPOSAL.md
+          tag_name: ${{ inputs.tag }}
+          name: ${{ format('MamboLite OCR {0}', inputs.tag) }}
+          body_path: .github/RELEASE_NOTES.md
+          prerelease: ${{ inputs.prerelease == 'true' }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
