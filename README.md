@@ -127,4 +127,34 @@ Notes:
 
 - See `ROADMAP.md` for Phases 2–7: multi-file intake, fuzzy dedupe, Excel output, data quality, GUI settings, integrations, advanced matching, and packaging/ops.
 
+## Troubleshooting
+
+- CSV encoding issues
+  - Symptom: UnicodeDecodeError or garbled characters
+  - Fix: The tool auto-tries UTF-8, UTF-8-SIG, CP1252, and Latin-1. If input still fails, re-export as UTF-8 or open/save in a spreadsheet as CSV (UTF-8).
+
+- Outlook email option not working
+  - Symptom: “Outlook (pywin32) is not installed or unavailable.”
+  - Fix: Install Outlook desktop and `pywin32` (`pip install pywin32`). Use SMTP as an alternative.
+
+- SMTP send fails
+  - Symptom: Auth or connection error
+  - Fix: Verify host/port (587/TLS or 465/SSL), username/password, and that your firewall allows outbound SMTP. Some providers require app passwords.
+
+- Executable flagged by SmartScreen
+  - Symptom: “Windows protected your PC”
+  - Fix: Click “More info” -> “Run anyway”, or use a code-signed build. See “Code signing”.
+
+- Missing DLLs on a fresh Windows
+  - Symptom: App fails to start
+  - Fix: Ensure you’re using the distributed `.exe` from Releases. If persistent, report the error so we can include missing redistributables.
+
+## Code signing (optional)
+
+Release workflows support code signing if you provide secrets:
+- `CODE_SIGN_PFX_BASE64`: Base64 of your .pfx certificate (with private key)
+- `CODE_SIGN_PASSWORD`: Password to the PFX
+
+The workflow will decode and sign both executables using SHA256 and a timestamp server. If not provided, executables are still produced but may prompt SmartScreen on first run.
+
 

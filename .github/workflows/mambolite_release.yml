@@ -1,4 +1,4 @@
-name: Release MamboLite
+﻿name: Release MamboLite
 
 on:
   workflow_dispatch:
@@ -40,6 +40,24 @@ jobs:
       - name: Generate SOW PDF
         run: |
           python MamboLite/scripts/generate_docs.py
+      - name: Prepare release notes
+        shell: pwsh
+        run: |
+          $phase = 'Phase 1'
+          $tag = '${{ github.event_name == '"'workflow_dispatch'"' && inputs.tag || github.ref_name }}'
+          (Get-Content .github/RELEASE_TEMPLATE.md -Raw).Replace('{{PHASE}}',$phase).Replace('{{TAG}}',$tag) | Set-Content .github/RELEASE_NOTES.md -Encoding UTF8
+      - name: Code sign (optional)
+        if: ${{ secrets.CODE_SIGN_PFX_BASE64 != '' && secrets.CODE_SIGN_PASSWORD != '' }}
+        shell: pwsh
+        env:
+          CODE_SIGN_PFX_BASE64: ${{ secrets.CODE_SIGN_PFX_BASE64 }}
+          CODE_SIGN_PASSWORD: ${{ secrets.CODE_SIGN_PASSWORD }}
+        run: |
+          $pfx = Join-Path $PWD 'codesign.pfx'
+          [IO.File]::WriteAllBytes($pfx, [Convert]::FromBase64String($env:CODE_SIGN_PFX_BASE64))
+          $signtool = (Get-ChildItem -Path 'C:\\Program Files (x86)\\Windows Kits\\10\\bin' -Recurse -Filter signtool.exe | Sort-Object FullName -Descending | Select-Object -First 1).FullName
+          if (-not $signtool) { throw 'signtool.exe not found' }
+          & $signtool sign /f $pfx /p $env:CODE_SIGN_PASSWORD /fd SHA256 /tr http://timestamp.digicert.com /td SHA256 dist\\MamboLite.exe dist\\MamboLiteCLI.exe
       - name: Create Release and Upload
         uses: softprops/action-gh-release@v2
         with:
@@ -49,7 +67,8 @@ jobs:
             MamboLite/docs/SOW.pdf
           tag_name: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref_name }}
           name: ${{ github.event_name == 'workflow_dispatch' && format('MamboLite {0}', inputs.tag) || format('MamboLite {0}', github.ref_name) }}
-          body: "Phase 1: CLI + GUI + SMTP/Outlook"
+          body_path: .github/RELEASE_NOTES.md
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
 
