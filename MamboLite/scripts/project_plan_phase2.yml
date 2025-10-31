@@ -1,0 +1,156 @@
+project:
+  name: "MamboLite Phase 2"
+  description: "Multi-file intake, fuzzy dedupe, Excel M1–M4 export, and reports"
+  columns: [Backlog, Ready, In Progress, In Review, Done]
+
+milestones:
+  - title: "P2-M1: Multi-file ingestion & profiles"
+    due_on: "2025-12-02"
+  - title: "P2-M2: Fuzzy dedupe engine"
+    due_on: "2025-12-09"
+  - title: "P2-M3: Excel export & reports"
+    due_on: "2025-12-13"
+  - title: "P2-M4: UAT & Handover"
+    due_on: "2025-12-17"
+
+issues:
+  - title: "Design multi-source config & profiles"
+    body: |
+      Define per-source mapping profiles and inputs directory scanning.
+
+      Acceptance:
+      - [ ] Profiles concept drafted (YAML/CSV based)
+      - [ ] Inputs/ lookups folder structure documented
+      - [ ] Profile selection precedence defined (CLI flag vs auto-detect)
+    labels: [phase2, design]
+    milestone: "P2-M1: Multi-file ingestion & profiles"
+    column: Backlog
+
+  - title: "Implement inputs directory ingestion"
+    body: |
+      Scan a directory for CSVs; load with encoding fallback; attach source labels.
+
+      Acceptance:
+      - [ ] Recursively find *.csv (ignore non-CSV)
+      - [ ] Fallback encodings (UTF-8/UTF-8-SIG/CP1252/Latin-1)
+      - [ ] `source` column includes filename or profile name
+    labels: [phase2, ingestion]
+    milestone: "P2-M1: Multi-file ingestion & profiles"
+    column: Ready
+
+  - title: "Mapping aggregator with profiles"
+    body: |
+      Apply alias mapping per profile then aggregate to unified schema.
+
+      Acceptance:
+      - [ ] Loads profile alias maps
+      - [ ] Merges to unified target columns
+      - [ ] Unknown headers ignored safely
+    labels: [phase2, mapping]
+    milestone: "P2-M1: Multi-file ingestion & profiles"
+    column: Ready
+
+  - title: "Exact + domain dedupe rules"
+    body: |
+      Implement dedupe passes: exact email; same domain + name.
+
+      Acceptance:
+      - [ ] Pass 1: exact email keeps first
+      - [ ] Pass 2: same domain + same name collapses
+      - [ ] Report counts per rule
+    labels: [phase2, dedupe]
+    milestone: "P2-M2: Fuzzy dedupe engine"
+    column: Backlog
+
+  - title: "Fuzzy name+company matching"
+    body: |
+      Add fuzzy matching for name+company; configurable threshold.
+
+      Acceptance:
+      - [ ] Similarity function chosen (e.g., SequenceMatcher/Levenshtein)
+      - [ ] Threshold configurable via CLI and config
+      - [ ] Dedupe report includes fuzzy merges
+    labels: [phase2, dedupe]
+    milestone: "P2-M2: Fuzzy dedupe engine"
+    column: Backlog
+
+  - title: "Thresholds & config file"
+    body: |
+      Introduce `phase2.yaml` config with thresholds and dedupe rules.
+
+      Acceptance:
+      - [ ] YAML config loaded via `--config`
+      - [ ] CLI overrides config (priority)
+      - [ ] Docs list defaults and examples
+    labels: [phase2, config]
+    milestone: "P2-M2: Fuzzy dedupe engine"
+    column: Ready
+
+  - title: "Excel M1–M4 export with Summary"
+    body: |
+      Export XLSX with M1 (intake), M2 (mapped), M3 (cleaned), M4 (final) per source; add Summary tab.
+
+      Acceptance:
+      - [ ] Valid XLSX with auto-width columns
+      - [ ] Per-source tabs (safe names, <=31 chars)
+      - [ ] Summary with totals and dedupe counts
+    labels: [phase2, export]
+    milestone: "P2-M3: Excel export & reports"
+    column: Backlog
+
+  - title: "Dedupe & quality reports"
+    body: |
+      Generate CSV/JSON reports for dedupe results and quality metrics.
+
+      Acceptance:
+      - [ ] Dedupe report per rule with counts
+      - [ ] Optional quality scoring summary
+    labels: [phase2, reporting]
+    milestone: "P2-M3: Excel export & reports"
+    column: Ready
+
+  - title: "CLI flags for Phase 2"
+    body: |
+      Add flags: `--inputs`, `--xlsx`, `--profile`, `--config`, `--fuzzy-threshold`.
+
+      Acceptance:
+      - [ ] Help text updated
+      - [ ] Conflicts validated
+    labels: [phase2, cli]
+    milestone: "P2-M3: Excel export & reports"
+    column: Backlog
+
+  - title: "Fixtures & performance test"
+    body: |
+      Add multi-file fixtures and performance test (>=100k rows synthetic).
+
+      Acceptance:
+      - [ ] Sample merges match expected output
+      - [ ] 100k rows processed within target time (document result)
+    labels: [phase2, qa]
+    milestone: "P2-M3: Excel export & reports"
+    column: Backlog
+
+  - title: "Docs update for Phase 2"
+    body: |
+      Update README and docs to cover multi-file usage, thresholds, and reports.
+
+      Acceptance:
+      - [ ] README examples for `--inputs`, `--xlsx`
+      - [ ] Config documentation with thresholds
+    labels: [phase2, docs]
+    milestone: "P2-M3: Excel export & reports"
+    column: Backlog
+
+  - title: "P2 UAT & handover"
+    body: |
+      Validate with 3–5 user CSV sets; produce XLSX + reports; close out.
+
+      Acceptance:
+      - [ ] Successful runs on provided sets
+      - [ ] XLSX and reports verified
+      - [ ] Handover checklist complete
+    labels: [phase2, uat]
+    milestone: "P2-M4: UAT & Handover"
+    column: Ready
+
