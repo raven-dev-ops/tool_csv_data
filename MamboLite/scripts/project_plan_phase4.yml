@@ -1,0 +1,108 @@
+project:
+  name: "MamboLite Phase 4"
+  description: "Business card scanner with OCR to create contact cards in the dashboard"
+  columns: [Backlog, Ready, In Progress, In Review, Done]
+
+milestones:
+  - title: "P4-M1: OCR engine & data model"
+    due_on: "2026-02-07"
+  - title: "P4-M2: Capture (web/mobile)"
+    due_on: "2026-02-14"
+  - title: "P4-M3: Extraction & validation"
+    due_on: "2026-02-21"
+  - title: "P4-M4: UAT & Release"
+    due_on: "2026-02-28"
+
+issues:
+  - title: "Evaluate OCR approach (local vs cloud)"
+    body: |
+      Compare Tesseract (local, WASM/desktop) vs. cloud OCR (AWS Textract/Google Vision). Consider latency, cost, accuracy, PII.
+
+      Acceptance:
+      - [ ] Decision documented with trade-offs
+      - [ ] Proof-of-concept accuracy check on sample cards
+    labels: [phase4, ocr]
+    milestone: "P4-M1: OCR engine & data model"
+    column: Backlog
+
+  - title: "Card image model & storage"
+    body: |
+      Define storage (S3/Azure Blob), retention policy, and associate images with contacts.
+
+      Acceptance:
+      - [ ] Storage bucket/container provisioned
+      - [ ] Metadata model (user, contact, timestamps)
+      - [ ] Retention and privacy policy documented
+    labels: [phase4, storage]
+    milestone: "P4-M1: OCR engine & data model"
+    column: Ready
+
+  - title: "Web capture (camera)"
+    body: |
+      Implement browser capture with getUserMedia, cropping, perspective correction, and contrast enhancements.
+
+      Acceptance:
+      - [ ] Cross-browser camera capture
+      - [ ] Image cleanup (deskew, crop)
+      - [ ] Upload to OCR pipeline
+    labels: [phase4, capture]
+    milestone: "P4-M2: Capture (web/mobile)"
+    column: Backlog
+
+  - title: "Mobile app capture (optional)"
+    body: |
+      React Native or Capacitor app for scanning on-device with native camera UX.
+
+      Acceptance:
+      - [ ] Build & deploy dev build (iOS/Android as feasible)
+      - [ ] Upload scans to user account
+    labels: [phase4, mobile]
+    milestone: "P4-M2: Capture (web/mobile)"
+    column: Backlog
+
+  - title: "Field extraction & parsing"
+    body: |
+      Extract name, title, company, email, phone, address, website using regex/NLP.
+
+      Acceptance:
+      - [ ] Extraction confidence per field
+      - [ ] Heuristics for multiple phones/emails
+      - [ ] Normalization into unified schema
+    labels: [phase4, extraction]
+    milestone: "P4-M3: Extraction & validation"
+    column: Ready
+
+  - title: "Validation & dedupe integration"
+    body: |
+      Validate extracted data and dedupe against existing contacts before save.
+
+      Acceptance:
+      - [ ] Form-driven review step (edit before save)
+      - [ ] Dedupe flags and merge options
+    labels: [phase4, validation]
+    milestone: "P4-M3: Extraction & validation"
+    column: Backlog
+
+  - title: "Dashboard integration"
+    body: |
+      Add “Scans” page with list, status, and quick actions to create/edit contacts.
+
+      Acceptance:
+      - [ ] Scans list with thumbnails/status
+      - [ ] Create/edit links to contact detail
+    labels: [phase4, ux]
+    milestone: "P4-M4: UAT & Release"
+    column: Ready
+
+  - title: "Security & privacy for images"
+    body: |
+      Access control, signed URLs, encryption, and deletion policy for images.
+
+      Acceptance:
+      - [ ] Signed URL access limited per user/session
+      - [ ] Encryption at rest enabled
+      - [ ] Delete-on-request pathway documented
+    labels: [phase4, security]
+    milestone: "P4-M4: UAT & Release"
+    column: Backlog
+

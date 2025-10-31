@@ -1,0 +1,136 @@
+project:
+  name: "MamboLite Phase 3"
+  description: "Web dashboard with user accounts and API connectors for contact collation"
+  columns: [Backlog, Ready, In Progress, In Review, Done]
+
+milestones:
+  - title: "P3-M1: Platform & Auth"
+    due_on: "2026-01-10"
+  - title: "P3-M2: Connectors & OAuth"
+    due_on: "2026-01-17"
+  - title: "P3-M3: Sync & Mapping"
+    due_on: "2026-01-24"
+  - title: "P3-M4: Dashboard UX & UAT"
+    due_on: "2026-01-31"
+
+issues:
+  - title: "Select stack & deploy baseline"
+    body: |
+      Choose stack (e.g., Next.js + FastAPI/Node) and provision baseline (DB, app runtime).
+
+      Acceptance:
+      - [ ] Repo structure and CI checks
+      - [ ] Dev/test/prod environments
+      - [ ] DB schema migration tooling (e.g., Alembic/Prisma)
+    labels: [phase3, platform]
+    milestone: "P3-M1: Platform & Auth"
+    column: Backlog
+
+  - title: "User auth and account model"
+    body: |
+      Integrate managed auth (Auth0/Clerk/Cognito) and implement account + user profiles.
+
+      Acceptance:
+      - [ ] Email/password + OAuth identity providers (Google/Microsoft) supported
+      - [ ] Roles (owner/admin) and org (if needed)
+      - [ ] Secure session and logout
+    labels: [phase3, auth]
+    milestone: "P3-M1: Platform & Auth"
+    column: Ready
+
+  - title: "Settings & secrets management"
+    body: |
+      Build a settings page for lookups, dedupe thresholds, and connector toggles. Store credentials securely.
+
+      Acceptance:
+      - [ ] Settings persisted per account
+      - [ ] Secrets stored in provider vault or encrypted at rest
+      - [ ] Validation and audit logging
+    labels: [phase3, settings]
+    milestone: "P3-M1: Platform & Auth"
+    column: Ready
+
+  - title: "Google People API connector"
+    body: |
+      Implement OAuth 2.0 flow and contacts ingestion via Google People API.
+
+      Acceptance:
+      - [ ] OAuth consent and token storage/refresh
+      - [ ] Batch fetch with pagination and rate-limit handling
+      - [ ] Map to unified schema
+    labels: [phase3, connector]
+    milestone: "P3-M2: Connectors & OAuth"
+    column: Backlog
+
+  - title: "Microsoft Graph Contacts connector"
+    body: |
+      Implement OAuth and ingestion via Microsoft Graph.
+
+      Acceptance:
+      - [ ] Azure app registration + scopes
+      - [ ] Incremental sync via delta queries if possible
+      - [ ] Map to unified schema
+    labels: [phase3, connector]
+    milestone: "P3-M2: Connectors & OAuth"
+    column: Backlog
+
+  - title: "HubSpot CRM connector (read-only)"
+    body: |
+      OAuth and read contacts from HubSpot for collation.
+
+      Acceptance:
+      - [ ] OAuth app + scopes
+      - [ ] Batch fetch with pagination and rate-limit handling
+      - [ ] Map to unified schema
+    labels: [phase3, connector]
+    milestone: "P3-M2: Connectors & OAuth"
+    column: Ready
+
+  - title: "Background sync jobs & scheduling"
+    body: |
+      Add job queue (e.g., Celery/RQ/BullMQ) for pull sync, retries, and backoff.
+
+      Acceptance:
+      - [ ] Scheduled sync per connector
+      - [ ] Robust retry/backoff for transient failures
+      - [ ] Sync run logs and user-visible status
+    labels: [phase3, sync]
+    milestone: "P3-M3: Sync & Mapping"
+    column: Backlog
+
+  - title: "Mapping & dedupe server-side"
+    body: |
+      Apply the unified mapping/dedupe pipeline to synced data, store results per account.
+
+      Acceptance:
+      - [ ] Unified schema tables
+      - [ ] Deduped set materialized and queryable
+      - [ ] Export/download endpoint (CSV/XLSX)
+    labels: [phase3, mapping]
+    milestone: "P3-M3: Sync & Mapping"
+    column: Ready
+
+  - title: "Dashboard UX"
+    body: |
+      Build web pages for connectors, sync status, contact list, and exports.
+
+      Acceptance:
+      - [ ] Connectors page with connect/disconnect and status
+      - [ ] Recent syncs, counts, and errors view
+      - [ ] Export/download CTA with progress
+    labels: [phase3, ux]
+    milestone: "P3-M4: Dashboard UX & UAT"
+    column: Backlog
+
+  - title: "Security review & logging"
+    body: |
+      Audit logging, PII protection, least-privilege scopes, and rate limiting.
+
+      Acceptance:
+      - [ ] Audit logs for auth/connectors/exports
+      - [ ] Minimal OAuth scopes and secure token storage
+      - [ ] Rate limit and DoS protection
+    labels: [phase3, security]
+    milestone: "P3-M4: Dashboard UX & UAT"
+    column: Ready
+
