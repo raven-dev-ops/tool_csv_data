@@ -123,4 +123,8 @@ Notes:
 - On macOS/Linux, replace the `;` in `--add-data` with `:`.
 - The app auto-detects bundled resources via PyInstaller when available.
 
+## Roadmap
+
+- See `ROADMAP.md` for Phases 2–7: multi-file intake, fuzzy dedupe, Excel output, data quality, GUI settings, integrations, advanced matching, and packaging/ops.
+
 
