@@ -1,0 +1,79 @@
+project:
+  name: "MamboLite Phase 1"
+  description: "Single CSV contact formatter: CLI + GUI + SMTP"
+  columns: [Backlog, Ready, In Progress, In Review, Done]
+
+milestones:
+  - title: "M1: Baseline + CLI"
+    due_on: "2025-11-07"
+  - title: "M2: GUI + Email"
+    due_on: "2025-11-12"
+  - title: "M3: Docs + Samples"
+    due_on: "2025-11-14"
+
+issues:
+  - title: "Select baseline and stabilize code"
+    body: "Consolidate Phase 1 scope and ensure clean logging and inputs."
+    labels: [phase1, baseline]
+    milestone: "M1: Baseline + CLI"
+    column: Backlog
+
+  - title: "Add header alias mapping via lookups"
+    body: "Implement alias→target mapping from column_map_lookup.csv"
+    labels: [phase1, cli]
+    milestone: "M1: Baseline + CLI"
+    column: Ready
+
+  - title: "Implement name parsing and normalization"
+    body: "Prefix/suffix handling, basic compound last names, phone/email normalization."
+    labels: [phase1, cli]
+    milestone: "M1: Baseline + CLI"
+    column: Ready
+
+  - title: "CLI flags and output schema"
+    body: "Add argparse, write standard CSV columns in fixed order."
+    labels: [phase1, cli]
+    milestone: "M1: Baseline + CLI"
+    column: Ready
+
+  - title: "Tkinter GUI wrapper"
+    body: "Browse input/output, pick lookups, toggle dedupe, optional email."
+    labels: [phase1, gui]
+    milestone: "M2: GUI + Email"
+    column: Backlog
+
+  - title: "SMTP send of result"
+    body: "Send attachment via SMTP using JSON config."
+    labels: [phase1, email]
+    milestone: "M2: GUI + Email"
+    column: Backlog
+
+  - title: "Seed lookups and sample CSV"
+    body: "Provide starter files for prefixes, suffixes, compound names, and a sample."
+    labels: [phase1, lookups]
+    milestone: "M3: Docs + Samples"
+    column: Backlog
+
+  - title: "Documentation and README"
+    body: "Usage instructions, lookup editing guidance, and acceptance criteria."
+    labels: [phase1, docs]
+    milestone: "M3: Docs + Samples"
+    column: Backlog
+  - title: "Windows packaging (.exe)"
+    body: "Create PyInstaller builds for CLI and GUI; include lookups and SMTP template."
+    labels: [phase1, packaging]
+    milestone: "M3: Docs + Samples"
+    column: Backlog
+
+  - title: "Add Outlook (MAPI) email option"
+    body: "Use pywin32 to send email via Outlook on Windows; add GUI toggle."
+    labels: [phase1, email]
+    milestone: "M2: GUI + Email"
+    column: Ready
+
+  - title: "Publish Kanban to GitHub Project"
+    body: "Run export_kanban.py with GH_TOKEN against target repo; verify columns/cards."
+    labels: [phase1, management]
+    milestone: "M3: Docs + Samples"
+    column: Ready
+

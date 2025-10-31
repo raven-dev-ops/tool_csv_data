@@ -1,0 +1,11 @@
+{
+  "host": "smtp.yourprovider.com",
+  "port": 587,
+  "username": "smtp-user@yourprovider.com",
+  "password": "your-app-password-or-token",
+  "use_tls": true,
+  "use_ssl": false,
+  "sender": "no-reply@yourdomain.com",
+  "subject": "MamboLite formatted contacts",
+  "body": "Please find the formatted contacts CSV attached."
+}

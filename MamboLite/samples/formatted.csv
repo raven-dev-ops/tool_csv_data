@@ -1,0 +1,5 @@
+source,full_name,prefix,first_name,middle_name,last_name,suffix,email,email_2,phone_mobile,phone_work,phone_home,company,title,street,street2,city,state,postal_code,country,website,linkedin_profile,notes
+Sample,Dr. Maria De La Cruz,,Maria,,Cruz,,maria.cruz@example.com,,314-555-1212,,,Acme Corp,Senior Engineer,123 Main St,,St Louis,MO,63101,,https://example.com,,VIP contact
+Sample,John M Smith,,John,,Smith,,john.smith@example.com,,555-123-4567,,,Example Inc,Manager,456 Oak Ave,,Seattle,WA,98101,,,,
+Sample,Jane Johnson,,,,,,jane.johnson@example.com,,,,,Tech.io,Director,789 Pine Rd,,Denver,CO,80202,,https://tech.io,,
+Sample,Bob Williams,,Bob,,Williams,,,,314-555-9999,,,Legal Group,Attorney,101 First St,,Chicago,IL,60601,,,,No email yet

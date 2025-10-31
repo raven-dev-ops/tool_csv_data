@@ -1,0 +1,5 @@
+Full Name,Given Name,Family Name,E-mail 1 - Value,Mobile Phone,Organization Name,Job Title,Address 1 - Street,Address 1 - City,Address 1 - Region,Address 1 - Postal Code,Website 1 - Value,Notes
+Dr. Maria De La Cruz,maria,cruz,maria.cruz@example.com,314-555-1212,Acme Corp,Senior Engineer,123 Main St,St Louis,MO,63101,https://example.com,VIP contact
+John M Smith,John,Smith,john.smith@example.com,555-123-4567,Example Inc,Manager,456 Oak Ave,Seattle,WA,98101,,
+Jane Johnson,,,jane.johnson@example.com,,Tech.io,Director,789 Pine Rd,Denver,CO,80202,https://tech.io,
+Bob Williams,Bob,Williams,,314-555-9999,Legal Group,Attorney,101 First St,Chicago,IL,60601,,No email yet
