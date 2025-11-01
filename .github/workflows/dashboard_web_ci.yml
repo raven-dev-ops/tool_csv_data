@@ -1,0 +1,27 @@
+name: CI - Dashboard Web Placeholder
+
+on:
+  push:
+    paths:
+      - 'dashboard/web/**'
+  pull_request:
+    paths:
+      - 'dashboard/web/**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install (ci)
+        run: |
+          cd dashboard/web
+          npm ci
+      - name: Build
+        run: |
+          cd dashboard/web
+          npm run build
+
