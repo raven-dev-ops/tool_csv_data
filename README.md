@@ -23,6 +23,17 @@ MamboLite/
   - SOW.md                  # Statement of Work (source for PDF)
 ```
 
+Additional components
+
+```
+dashboard/
+- web-next/                 # Next.js bootstrap (Phase 3 web dashboard)
+- api-python/               # FastAPI app skeleton (Phase 3 API)
+
+.github/
+- workflows/                # Actions for Kanban & Releases (Phases 1–4)
+```
+
 ## Run the GUI (recommended for non-technical users)
 
 1. Ensure Python 3.9+ is installed.
@@ -126,6 +137,12 @@ Notes:
 ## Roadmap
 
 - See `ROADMAP.md` for Phases 2–7: multi-file intake, fuzzy dedupe, Excel output, data quality, GUI settings, integrations, advanced matching, and packaging/ops.
+
+## Housekeeping
+
+- Legacy scripts and local build artifacts have been removed from the root.
+- Use GitHub Actions to generate Kanban boards and Releases with executables.
+- Executables are published as release assets; they are not stored in the repo.
 
 ## Troubleshooting
 

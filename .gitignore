@@ -1,0 +1,19 @@
+# Build artifacts
+build/
+dist/
+deliverables/
+*.spec
+*.exe
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# Node
+node_modules/
+
+# Env / secrets
+.env
+*.env
+
