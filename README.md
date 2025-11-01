@@ -1,7 +1,17 @@
-﻿# MamboLite - single-CSV contact formatter
+﻿# MamboLite - single-CSV contact formatter`n`n![Phase 1 Release](https://github.com/raven-dev-ops/ravdevops_demo_datatool/actions/workflows/mambolite_release.yml/badge.svg) ![Phase 2 Release](https://github.com/raven-dev-ops/ravdevops_demo_datatool/actions/workflows/mambolite_release_phase2.yml/badge.svg) ![Web Next CI](https://github.com/raven-dev-ops/ravdevops_demo_datatool/actions/workflows/dashboard_webnext_ci.yml/badge.svg) ![API CI](https://github.com/raven-dev-ops/ravdevops_demo_datatool/actions/workflows/dashboard_api_ci.yml/badge.svg) ![Latest Release](https://img.shields.io/github/v/release/raven-dev-ops/ravdevops_demo_datatool?include_prereleases)
 
 **Phase 1 goal:** non-technical users can take one CSV (Gmail, iPhone, LinkedIn, etc.), click to format, and get a standard, clean CSV. Optional: email the result.
 
+## Quick start
+
+- Easiest: download the latest `.exe` from Releases and run the GUI.
+- Or run from source (GUI or CLI) using the steps below.
+
+
+## Demo
+
+- A short GUI demo GIF will be added here after the next release.
+- Tip: to record your own on Windows, use Xbox Game Bar (Win + G), then drag the GIF into MamboLite/docs/ and link it here.
 ## Project layout
 
 ```
@@ -31,8 +41,23 @@ dashboard/
 - api-python/               # FastAPI app skeleton (Phase 3 API)
 
 .github/
-- workflows/                # Actions for Kanban & Releases (Phases 1–4)
+- workflows/                # Actions for Kanban & Releases (Phases 1-4)
 ```
+
+## Actions index (one-click in GitHub)
+
+- Kanban boards
+  - `Create MamboLite Kanban` (Phase 1)
+  - `Create MamboLite Phase 2 Kanban`
+  - `Create MamboLite Phase 3 Kanban`
+  - `Create MamboLite Phase 4 Kanban`
+- Releases
+  - `Release MamboLite` (Phase 1 executables)
+  - `Release MamboLite Phase 2` (executables + asset pack)
+  - `Release MamboLite Dashboard` (Phase 3 bundle)
+  - `Release MamboLite OCR Module` (Phase 4 bundle)
+
+Find these under the GitHub Actions tab in this repository.
 
 ## Run the GUI (recommended for non-technical users)
 
@@ -64,6 +89,12 @@ python MamboLite/mambo_lite.py --input path/to/contacts.csv --source "Gmail"
 # --email you@domain.com --email-method outlook
 # --email you@domain.com --email-method smtp --smtp MamboLite/smtp.json.example
 ```
+
+## Download executables (Releases)
+
+- Go to the Releases page for this repo and download:
+  - `MamboLite.exe` (GUI) and `MamboLiteCLI.exe` (CLI) for Phase 1/2
+  - Dashboard/OCR assets for Phase 3/4 (as they are released)
 
 ### Output schema (column order)
 
@@ -175,3 +206,21 @@ Release workflows support code signing if you provide secrets:
 The workflow will decode and sign both executables using SHA256 and a timestamp server. If not provided, executables are still produced but may prompt SmartScreen on first run.
 
 
+
+
+## FAQ
+
+- Where do I change header mappings?
+  - Edit `MamboLite/lookups/column_map_lookup.csv` (alias -> target field). Re-run without changing code.
+
+- Can I run without Outlook?
+  - Yes. Use SMTP with `--email you@domain.com --email-method smtp --smtp MamboLite/smtp.json.example`.
+
+- How do I update prefixes/suffixes/compound names?
+  - Edit the CSVs in `MamboLite/lookups/`. They are loaded at runtime.
+
+- Why aren’t executables in the repo?
+  - We publish them on the Releases page via GitHub Actions. This keeps the repo small and clean.
+
+- How do I get Phase 3/4 artifacts?
+  - Check Releases for the Dashboard/OCR bundles or run the corresponding release workflows from GitHub Actions.
