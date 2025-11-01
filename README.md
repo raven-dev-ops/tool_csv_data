@@ -1,4 +1,9 @@
-﻿# MamboLite - single-CSV contact formatter`n`n![Phase 1 Release](https://github.com/raven-dev-ops/ravdevops_demo_datatool/actions/workflows/mambolite_release.yml/badge.svg) ![Phase 2 Release](https://github.com/raven-dev-ops/ravdevops_demo_datatool/actions/workflows/mambolite_release_phase2.yml/badge.svg) ![Web Next CI](https://github.com/raven-dev-ops/ravdevops_demo_datatool/actions/workflows/dashboard_webnext_ci.yml/badge.svg) ![API CI](https://github.com/raven-dev-ops/ravdevops_demo_datatool/actions/workflows/dashboard_api_ci.yml/badge.svg) ![Latest Release](https://img.shields.io/github/v/release/raven-dev-ops/ravdevops_demo_datatool?include_prereleases)
+﻿# MamboLite - single-CSV contact formatter
+[Phase 1 Release](https://github.com/raven-dev-ops/ravdevops_demo_datatool/actions/workflows/mambolite_release.yml/badge.svg)
+[Phase 2 Release](https://github.com/raven-dev-ops/ravdevops_demo_datatool/actions/workflows/mambolite_release_phase2.yml/badge.svg)
+[Web Next CI](https://github.com/raven-dev-ops/ravdevops_demo_datatool/actions/workflows/dashboard_webnext_ci.yml/badge.svg)
+[API CI](https://github.com/raven-dev-ops/ravdevops_demo_datatool/actions/workflows/dashboard_api_ci.yml/badge.svg) 
+[Latest Release](https://img.shields.io/github/v/release/raven-dev-ops/ravdevops_demo_datatool?include_prereleases)
 
 **Phase 1 goal:** non-technical users can take one CSV (Gmail, iPhone, LinkedIn, etc.), click to format, and get a standard, clean CSV. Optional: email the result.
 
