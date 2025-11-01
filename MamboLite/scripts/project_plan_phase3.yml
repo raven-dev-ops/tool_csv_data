@@ -134,3 +134,60 @@ issues:
     milestone: "P3-M4: Dashboard UX & UAT"
     column: Ready
 
+  - title: "ADR-0001: Dashboard stack selection"
+    body: |
+      Record and accept the decision to use Next.js + FastAPI + Celery/Redis + Postgres + Auth0.
+
+      Acceptance:
+      - [ ] ADR added at `MamboLite/docs/ADR-0001-dashboard-stack.md`
+      - [ ] Reviewed and accepted in project
+    labels: [phase3, platform, adr]
+    milestone: "P3-M1: Platform & Auth"
+    column: Ready
+
+  - title: "Initialize Next.js app skeleton"
+    body: |
+      Create `dashboard/web` with Next.js + TypeScript, auth placeholder, and CI build.
+
+      Acceptance:
+      - [ ] Next.js app builds locally
+      - [ ] CI build workflow green
+      - [ ] README with local run instructions
+    labels: [phase3, web]
+    milestone: "P3-M1: Platform & Auth"
+    column: Backlog
+
+  - title: "Initialize FastAPI app skeleton"
+    body: |
+      Create `dashboard/api-python` with FastAPI, health endpoint, and CI build.
+
+      Acceptance:
+      - [ ] FastAPI app starts locally
+      - [ ] CI build workflow green
+      - [ ] Health endpoint `/healthz`
+    labels: [phase3, api]
+    milestone: "P3-M1: Platform & Auth"
+    column: Backlog
+
+  - title: "Provision Postgres and Redis"
+    body: |
+      Stand up managed Postgres and Redis instances and store connection strings in secrets.
+
+      Acceptance:
+      - [ ] Postgres reachable from API
+      - [ ] Redis reachable from workers
+      - [ ] Secrets configured in CI/CD
+    labels: [phase3, infra]
+    milestone: "P3-M1: Platform & Auth"
+    column: Backlog
+
+  - title: "CI workflows for web & API"
+    body: |
+      Add GitHub Actions to build/test the web and API skeletons on push/PR.
+
+      Acceptance:
+      - [ ] Web build workflow passing
+      - [ ] API build workflow passing
+    labels: [phase3, ci]
+    milestone: "P3-M1: Platform & Auth"
+    column: Backlog
