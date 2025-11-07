@@ -13,6 +13,19 @@ from tkinter import ttk
 from mambo_lite import process, resource_path
 
 
+def default_output_path() -> str:
+    """Return a safe default output path in the user's profile.
+
+    Prefer Documents, then Downloads, finally the home directory.
+    """
+    home = os.path.expanduser("~")
+    for folder in ("Documents", "Downloads"):
+        candidate_dir = os.path.join(home, folder)
+        if os.path.isdir(candidate_dir):
+            return os.path.join(candidate_dir, "formatted_contacts.csv")
+    return os.path.join(home, "formatted_contacts.csv")
+
+
 class TextLogger:
     def __init__(self, widget: ScrolledText):
         self.widget = widget
@@ -45,7 +58,7 @@ class MamboLiteGUI(tk.Tk):
 
         # Variables
         self.var_input = tk.StringVar()
-        self.var_output = tk.StringVar(value="formatted_contacts.csv")
+        self.var_output = tk.StringVar(value=default_output_path())
         default_lookups = resource_path("lookups")
         self.var_lookups = tk.StringVar(value=default_lookups)
         self.var_source = tk.StringVar(value="")
@@ -160,6 +173,37 @@ class MamboLiteGUI(tk.Tk):
         self._set_state(self.entry_smtp, smtp_enabled)
         self._set_state(self.btn_smtp, smtp_enabled)
 
+    def _validate_or_prompt_output(self, path):
+        """Ensure output path is absolute and writable.
+
+        If not, prompt the user with a Save As dialog. Returns the
+        validated path or None if the user cancels.
+        """
+        # Expand env vars and ~
+        p = os.path.expandvars(os.path.expanduser(path or ""))
+
+        need_prompt = False
+        if not p or not os.path.isabs(p):
+            need_prompt = True
+        else:
+            out_dir = os.path.dirname(os.path.abspath(p)) or os.getcwd()
+            if not os.path.isdir(out_dir) or not os.access(out_dir, os.W_OK):
+                need_prompt = True
+
+        if need_prompt:
+            dflt = default_output_path()
+            sel = filedialog.asksaveasfilename(
+                initialdir=os.path.dirname(dflt),
+                initialfile=os.path.basename(dflt),
+                defaultextension=".csv",
+                filetypes=[("CSV files", "*.csv"), ("All files", "*.*")],
+            )
+            if not sel:
+                return None
+            self.var_output.set(sel)
+            return sel
+        return p
+
     def browse_input(self):
         path = filedialog.askopenfilename(filetypes=[("CSV files", "*.csv"), ("All files", "*.*")])
         if path:
@@ -205,6 +249,12 @@ class MamboLiteGUI(tk.Tk):
                 if not smtp_path or not os.path.exists(smtp_path):
                     messagebox.showerror("Error", "Please choose a valid SMTP JSON file.")
                     return
+
+        # Ensure output path is absolute and writable; otherwise prompt the user
+        validated_output = self._validate_or_prompt_output(output_path)
+        if not validated_output:
+            return
+        output_path = validated_output
 
         logger = TextLogger(self.log_widget)
         self.log_widget.configure(state=tk.NORMAL)

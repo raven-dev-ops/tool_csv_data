@@ -283,7 +283,12 @@ def write_csv(df: pd.DataFrame, path: str) -> None:
     for col in TARGET_COLUMNS:
         if col not in df.columns:
             df[col] = ""
-    df[TARGET_COLUMNS].to_csv(path, index=False, quoting=csv.QUOTE_MINIMAL)
+    try:
+        df[TARGET_COLUMNS].to_csv(path, index=False, quoting=csv.QUOTE_MINIMAL)
+    except PermissionError as e:
+        raise PermissionError(
+            f"Permission denied writing '{path}'. Choose a different folder or close the file if it's open."
+        ) from e
 
 
 def send_email_with_attachment(smtp_config_path: str, recipient: str, attachment_path: str, logger=None) -> None:
