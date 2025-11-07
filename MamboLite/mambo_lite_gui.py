@@ -70,17 +70,24 @@ class MamboLiteGUI(tk.Tk):
         tk.Checkbutton(self, text="Deduplicate by email", variable=self.var_dedupe).grid(row=3, column=2, sticky="w", **pad)
 
         # Row 4: Email options
-        tk.Checkbutton(self, text="Send result via email", variable=self.var_send_email, command=self._toggle_email).grid(row=4, column=0, sticky="e", **pad)
-        method_frame = tk.Frame(self)
-        method_frame.grid(row=4, column=1, sticky="w", **pad)
-        tk.Radiobutton(method_frame, text="SMTP", variable=self.var_email_method, value="smtp", command=self._toggle_email).pack(side=tk.LEFT)
-        tk.Radiobutton(method_frame, text="Outlook", variable=self.var_email_method, value="outlook", command=self._toggle_email).pack(side=tk.LEFT)
-        tk.Entry(self, textvariable=self.var_recipient, width=30).grid(row=4, column=2, sticky="w", **pad)
+        self.chk_send_email = tk.Checkbutton(self, text="Send result via email", variable=self.var_send_email, command=self._toggle_email)
+        self.chk_send_email.grid(row=4, column=0, sticky="e", **pad)
+        self.method_frame = tk.Frame(self)
+        self.method_frame.grid(row=4, column=1, sticky="w", **pad)
+        self.rb_smtp = tk.Radiobutton(self.method_frame, text="SMTP", variable=self.var_email_method, value="smtp", command=self._toggle_email)
+        self.rb_smtp.pack(side=tk.LEFT)
+        self.rb_outlook = tk.Radiobutton(self.method_frame, text="Outlook", variable=self.var_email_method, value="outlook", command=self._toggle_email)
+        self.rb_outlook.pack(side=tk.LEFT)
+        self.entry_recipient = tk.Entry(self, textvariable=self.var_recipient, width=30)
+        self.entry_recipient.grid(row=4, column=2, sticky="w", **pad)
 
         # Row 5: SMTP JSON (only for SMTP)
-        tk.Label(self, text="SMTP JSON").grid(row=5, column=0, sticky="e", **pad)
-        tk.Entry(self, textvariable=self.var_smtp, width=70).grid(row=5, column=1, sticky="we", **pad)
-        tk.Button(self, text="Browse", command=self.browse_smtp).grid(row=5, column=2, **pad)
+        self.lbl_smtp = tk.Label(self, text="SMTP JSON")
+        self.lbl_smtp.grid(row=5, column=0, sticky="e", **pad)
+        self.entry_smtp = tk.Entry(self, textvariable=self.var_smtp, width=70)
+        self.entry_smtp.grid(row=5, column=1, sticky="we", **pad)
+        self.btn_smtp = tk.Button(self, text="Browse", command=self.browse_smtp)
+        self.btn_smtp.grid(row=5, column=2, **pad)
 
         # Row 6: Log area
         tk.Label(self, text="Log").grid(row=6, column=0, sticky="ne", **pad)
@@ -96,13 +103,17 @@ class MamboLiteGUI(tk.Tk):
 
     def _toggle_email(self):
         sending = self.var_send_email.get()
-        # Enable/disable method toggles and recipient
-        for child in self.grid_slaves(row=4):
-            child.configure(state=(tk.NORMAL if sending else tk.DISABLED))
-        # SMTP row toggles only when SMTP selected
-        smtp_state = tk.NORMAL if (sending and self.var_email_method.get() == "smtp") else tk.DISABLED
-        for child in self.grid_slaves(row=5):
-            child.configure(state=smtp_state)
+        state = tk.NORMAL if sending else tk.DISABLED
+        # Enable/disable only widgets that support 'state'
+        self.rb_smtp.configure(state=state)
+        self.rb_outlook.configure(state=state)
+        self.entry_recipient.configure(state=state)
+
+        # SMTP controls only when SMTP selected
+        smtp_enabled = sending and self.var_email_method.get() == "smtp"
+        smtp_state = tk.NORMAL if smtp_enabled else tk.DISABLED
+        self.entry_smtp.configure(state=smtp_state)
+        self.btn_smtp.configure(state=smtp_state)
 
     def browse_input(self):
         path = filedialog.askopenfilename(filetypes=[("CSV files", "*.csv"), ("All files", "*.*")])
