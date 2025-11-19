@@ -5,18 +5,25 @@
 [API CI](https://github.com/raven-dev-ops/ravdevops_demo_datatool/actions/workflows/dashboard_api_ci.yml/badge.svg) 
 [Latest Release](https://img.shields.io/github/v/release/raven-dev-ops/ravdevops_demo_datatool?include_prereleases)
 
-**Phase 1 goal:** non-technical users can take one CSV (Gmail, iPhone, LinkedIn, etc.), click to format, and get a standard, clean CSV. Optional: email the result.
+MamboLite is a single-CSV contact formatter. Non-technical users can take one CSV (Gmail, iPhone, LinkedIn, etc.), click to format, and get a standard, clean CSV, with an optional email step.
+
+## Docs & navigation
+
+- Quick start and usage: this file (`README.md`)
+- Project wiki and links hub: `wiki.md`
+- Phase 1 milestones and dates: `timeline.md`
+- Phases 2–8 roadmap: `roadmap.md`
+- Detailed Phase 1 project plan: `MamboLite/scripts/project_plan.yml`
 
 ## Quick start
 
 - Easiest: download the latest `.exe` from Releases and run the GUI.
 - Or run from source (GUI or CLI) using the steps below.
 
-
 ## Demo
 
 - A short GUI demo GIF will be added here after the next release.
-- Tip: to record your own on Windows, use Xbox Game Bar (Win + G), then drag the GIF into MamboLite/docs/ and link it here.
+- Tip: to record your own on Windows, use Xbox Game Bar (Win + G), then drag the GIF into `MamboLite/docs/` and link it here.
 ## Project layout
 
 ```
@@ -139,6 +146,18 @@ python MamboLite/scripts/export_kanban.py \
   --plan MamboLite/scripts/project_plan.yml
 ```
 
+## Task list (what's left)
+
+High-level future phases and work items. See `timeline.md` for detailed Phase 1 milestones and `roadmap.md` for later phases.
+
+- [ ] Phase 2 - Multi-file intake, fuzzy dedupe, Excel export
+- [ ] Phase 3 - Web dashboard & API connectors
+- [ ] Phase 4 - Business card OCR & scanning
+- [ ] Phase 5 - Data quality & enrichment
+- [ ] Phase 6 - Integrations (import/export targets)
+- [ ] Phase 7 - Advanced matching & learning
+- [ ] Phase 8 - Packaging & operations
+
 ## Next steps (optional future work)
 
 - Merge multiple CSVs
@@ -172,7 +191,11 @@ Notes:
 
 ## Roadmap
 
-- See `ROADMAP.md` for Phases 2–7: multi-file intake, fuzzy dedupe, Excel output, data quality, GUI settings, integrations, advanced matching, and packaging/ops.
+- See `roadmap.md` for Phases 2-7: multi-file intake, fuzzy dedupe, Excel output, data quality, GUI settings, integrations, advanced matching, and packaging/ops.
+
+## License
+
+This repository is intentionally **not** open-source licensed. See `LICENSE` for the NO LICENSE / all-rights-reserved notice.
 
 ## Housekeeping
 
